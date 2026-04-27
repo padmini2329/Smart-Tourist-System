@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f7f9fc;
+    color: #222;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.secondary {
+    border: 2px solid #2563eb;
+    color: #2563eb;
+}
+h1{
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+p {
+    font: 16px open-sans, sans-serif;
+    line-height: 24px;
+    max-width: 700px;
+    margin: 20px auto;
+    color: #555;
+}
+.nav-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: #505050;
+    text-decoration: none;
+}
+.nav-items a {
+    gap: 20px;
+    color: #8d8d8d;
+    text-decoration: none;
+}
+/* Hero */
+.hero-content-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    background-image: url("banner.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(5px);
+    background-color: #ede9e9;
+    background-blend-mode: overlay;
+}
+.hero {
+    text-align: center;
+}
+
+.hero span {
+    color: #2563eb;
+}
+
+
+.hero-buttons {
+    margin-top: 30px;
+}
+
+/* Features */
+.features {
+    background: #eef2f7;
+    padding: 60px 40px;
+}
+
+.features h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.feature-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.feature-card {
+    width: 40%;
+    background: white;
+    padding: 36px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* CTA */
+.cta {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #1f2937;
+    color: #ccc;
+}

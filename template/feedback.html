@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contact us</title>
+
+<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<style>
+
+*{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    font-family:'Quicksand', sans-serif;
+}
+
+body{
+    height:100vh;
+    width:100%;
+    
+    /* Tourist city background */
+    background: url("https://images.unsplash.com/photo-1505765050516-f72dcac9c60b") no-repeat center center/cover;
+}
+
+header{
+    width:100%;
+    padding:20px;
+    text-align:center;
+    background:rgba(0,0,0,0.6);
+    color:white;
+}
+
+.main{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:85vh;
+}
+
+.container{
+    width:850px;
+    background:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.contact-box{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+}
+
+/* Tourist image */
+
+.left{
+    background:url("https://images.unsplash.com/photo-1501785888041-af3ef285b470") no-repeat center;
+    background-size:cover;
+}
+
+.right{
+    padding:30px 40px;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.field{
+    width:100%;
+    border:2px solid #eee;
+    outline:none;
+    padding:10px;
+    margin-bottom:15px;
+    font-size:16px;
+    border-radius:5px;
+    transition:0.3s;
+}
+
+.field:hover{
+    background:#f0f0f0;
+}
+
+.field:focus{
+    border:2px solid #00a8ff;
+}
+
+textarea{
+    min-height:120px;
+}
+
+.btn{
+    width:100%;
+    padding:12px;
+    background:#00a8ff;
+    color:white;
+    border:none;
+    font-size:16px;
+    border-radius:5px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:hover{
+    background:#0077b6;
+}
+
+@media screen and (max-width:768px){
+
+.contact-box{
+grid-template-columns:1fr;
+}
+
+.left{
+height:200px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="main">
+
+<div class="container">
+
+<form action="" method="POST">
+
+<div class="contact-box">
+
+<div class="left"></div>
+
+<div class="right">
+
+<h2>FEEDBACK</h2>
+
+<br>
+
+<input type="text" id="name" name="name" class="field" placeholder="Your Name" required>
+
+<input type="email" id="email" name="email" class="field" placeholder="Your Email" required>
+
+<textarea placeholder="Share your travel experience or safety feedback..." id="msg" name="msg" class="field" required></textarea>
+
+<button class="btn">Submit</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

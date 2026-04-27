@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SOS Emergency Button</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#f4f6f9;
+    text-align:center;
+    padding-top:120px;
+}
+
+h2{
+    color:#d90429;
+}
+
+/* SOS Button */
+.sos-btn{
+    background:#ff0000;
+    color:white;
+    border:none;
+    font-size:28px;
+    font-weight:bold;
+    padding:25px 50px;
+    border-radius:100px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    transition:0.3s;
+}
+
+.sos-btn:hover{
+    background:#b30000;
+    transform:scale(1.05);
+}
+
+/* Info Box */
+#result{
+    margin-top:30px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.location-link{
+    color:#0077ff;
+    text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🚨 Panic Button System</h2>
+<p>One-click emergency button instantly shares location</p>
+
+<button class="sos-btn" onclick="sendSOS()">🚨 SOS</button>
+
+<div id="result"></div>
+
+<script>
+
+function sendSOS(){
+
+    const result=document.getElementById("result");
+
+    if(!navigator.geolocation){
+
+        result.innerHTML="Geolocation not supported";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            const lat=position.coords.latitude;
+            const lng=position.coords.longitude;
+
+            const mapLink=`https://www.google.com/maps?q=${lat},${lng}`;
+
+            result.innerHTML=`
+            🚨 Emergency Alert Sent! <br><br>
+            📍 Your Location: <br>
+            <a class="location-link" href="${mapLink}" target="_blank">
+            View Location on Map
+            </a>
+            `;
+
+            alert("🚨 SOS Alert Triggered! Location Shared.");
+
+        },
+
+        function(error){
+            result.innerHTML="Location Error: "+error.message;
+        }
+
+    );
+
+}
+
+</script>
+
+</body>
+</html>

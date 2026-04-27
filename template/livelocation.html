@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Tourist Location</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            text-align: center;
+        }
+
+        h2 {
+            color: #d90429;
+            margin-top: 20px;
+        }
+
+        #map {
+            height: 500px;
+            width: 90%;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        }
+
+        #status {
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>📍 Live Tourist Location</h2>
+<p id="status">Waiting for GPS permission...</p>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+// Create map WITHOUT fixed location
+var map = L.map('map');
+
+// Add tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: "© OpenStreetMap"
+}).addTo(map);
+
+var marker;
+var firstUpdate = true;
+
+// Success callback
+function success(position) {
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+    var accuracy = position.coords.accuracy;
+
+    document.getElementById("status").innerHTML =
+        "Tracking your live location (Accuracy: " +
+        accuracy.toFixed(0) + " meters)";
+
+    // Create marker first time
+    if (!marker) {
+        marker = L.marker([lat, lng]).addTo(map);
+    } else {
+        marker.setLatLng([lat, lng]);
+    }
+
+    // Center map on your real location
+    if (firstUpdate) {
+        map.setView([lat, lng], 16);
+        firstUpdate = false;
+    }
+}
+
+// Error callback
+function error(err) {
+    document.getElementById("status").innerHTML =
+        "Location error: " + err.message;
+    document.getElementById("status").style.color = "red";
+}
+
+// Start live tracking
+if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+        success,
+        error,
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 10000
+        }
+    );
+} else {
+    document.getElementById("status").innerHTML =
+        "Geolocation is not supported.";
+}
+</script>
+
+</body>
+</html>

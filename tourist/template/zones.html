@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>India Tourist Safety Monitoring</title>
+
+{% load static %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+
+body { 
+font-family: Arial; 
+text-align: center; 
+background:#f4f6f9; 
+margin:0;
+}
+
+h2 { color:#d90429; }
+
+#map{
+height:520px;
+width:92%;
+margin:20px auto;
+border-radius:12px;
+box-shadow:0 0 14px rgba(0,0,0,0.2);
+}
+
+#status{ 
+font-size:18px; 
+font-weight:bold; 
+}
+
+.safe{ color:green; }
+.unsafe{ color:red; }
+.neutral{ color:#333; }
+
+/* Navbar */
+
+.navbar {
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:20px 40px;
+background:white;
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo {
+font-size:20px;
+font-weight:bold;
+color:#203a43;
+}
+
+.nav-items{
+display:flex;
+gap:20px;
+}
+
+.nav-items a {
+color:#8d8d8d;
+text-decoration:none;
+}
+
+.btn{
+padding:10px 20px;
+border-radius:6px;
+font-weight:600;
+}
+
+.primary{
+background:#2563eb;
+color:white;
+}
+
+.secondary{
+border:2px solid #2563eb;
+color:#2563eb;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="navbar">
+<div class="logo">🛡 Smart Tourist Safety</div>
+
+<div class="nav-items">
+<a href="{% url 'zones' %}">Safe & Unsafe Zones</a>
+<a href="{% url 'emergency' %}">Emergency Alerts</a>
+<a href="{% url 'feedback' %}">Feedback</a>
+<a href="{% url 'panic' %}" class="btn secondary">Panic Button</a>
+<a href="{% url 'livelocation' %}" class="btn primary">Live Location</a>
+</div>
+
+</header>
+
+<h2>📍 Smart Tourist Safety Monitoring - India</h2>
+<p id="status" class="neutral">Getting GPS location...</p>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+// ================= MAP =================
+
+var map = L.map('map').setView([22.9734,78.6569],5);
+
+
+// FIX ACCESS BLOCKED
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+attribution:'© OpenStreetMap & CARTO'
+}).addTo(map);
+
+
+// ================= SAFE ZONES INDIA =================
+
+// const safeZones = [
+
+
+// /* Andhra Pradesh */
+// {lat:17.6868,lng:83.2185,name:"Visakhapatnam",radius:500},
+// {lat:16.5062,lng:80.6480,name:"Vijayawada",radius:500},
+// {lat:14.4426,lng:79.9865,name:"Nellore",radius:500},
+
+// /* Arunachal Pradesh */
+// {lat:27.0844,lng:93.6053,name:"Itanagar",radius:500},
+// {lat:27.1004,lng:93.6167,name:"Naharlagun",radius:500},
+// {lat:27.4661,lng:95.0333,name:"Pasighat",radius:500},
+
+// /* Assam */
+// {lat:26.1445,lng:91.7362,name:"Guwahati",radius:500},
+// {lat:26.7465,lng:94.2026,name:"Jorhat",radius:500},
+// {lat:26.6528,lng:92.7926,name:"Tezpur",radius:500},
+
+// /* Bihar */
+// {lat:25.5941,lng:85.1376,name:"Patna",radius:500},
+// {lat:26.1209,lng:85.3647,name:"Muzaffarpur",radius:500},
+// {lat:24.7914,lng:85.0002,name:"Gaya",radius:500},
+
+// /* Chhattisgarh */
+// {lat:21.2514,lng:81.6296,name:"Raipur",radius:500},
+// {lat:22.0797,lng:82.1391,name:"Bilaspur",radius:500},
+// {lat:19.0760,lng:81.9535,name:"Jagdalpur",radius:500},
+
+// /* Goa */
+// {lat:15.4909,lng:73.8278,name:"Panaji",radius:500},
+// {lat:15.2993,lng:74.1240,name:"Margao",radius:500},
+// {lat:15.6140,lng:73.7470,name:"Mapusa",radius:500},
+
+// /* Gujarat */
+// {lat:23.0225,lng:72.5714,name:"Ahmedabad",radius:500},
+// {lat:21.1702,lng:72.8311,name:"Surat",radius:500},
+// {lat:22.3039,lng:70.8022,name:"Rajkot",radius:500},
+
+// /* Haryana */
+// {lat:28.4595,lng:77.0266,name:"Gurgaon",radius:500},
+// {lat:29.0588,lng:76.0856,name:"Rohtak",radius:500},
+// {lat:28.8955,lng:76.6066,name:"Jhajjar",radius:500},
+
+// /* Himachal Pradesh */
+// {lat:31.1048,lng:77.1734,name:"Shimla",radius:500},
+// {lat:32.2190,lng:76.3234,name:"Dharamshala",radius:500},
+// {lat:32.2432,lng:77.1892,name:"Manali",radius:500},
+
+// /* Jharkhand */
+// {lat:23.3441,lng:85.3096,name:"Ranchi",radius:500},
+// {lat:23.7957,lng:86.4304,name:"Dhanbad",radius:500},
+// {lat:22.8046,lng:86.2029,name:"Jamshedpur",radius:500},
+
+// /* Karnataka */
+// {lat:12.9716, lng:77.5946, name:"MG Road", radius:700},
+// {lat:12.9750, lng:77.6050, name:"Brigade Road", radius:700},
+// {lat:12.9985, lng:77.5920, name:"Malleshwaram", radius:800},
+// {lat:12.9279, lng:77.6271, name:"Koramangala", radius:800},
+// {lat:12.9352, lng:77.6245, name:"Indiranagar", radius:800},
+// {lat:13.1718, lng:77.5362, name:"Presidency University", radius:900},
+// {lat:12.2958,lng:76.6394,name:"Mysore",radius:500},
+// {lat:15.3173,lng:75.7139,name:"Hubli",radius:500},
+
+// /* Kerala */
+// {lat:8.5241,lng:76.9366,name:"Trivandrum",radius:500},
+// {lat:9.9312,lng:76.2673,name:"Kochi",radius:500},
+// {lat:11.2588,lng:75.7804,name:"Kozhikode",radius:500},
+
+// /* Madhya Pradesh */
+// {lat:23.2599,lng:77.4126,name:"Bhopal",radius:500},
+// {lat:22.7196,lng:75.8577,name:"Indore",radius:500},
+// {lat:23.1815,lng:79.9864,name:"Jabalpur",radius:500},
+
+// /* Maharashtra */
+// {lat:19.0760,lng:72.8777,name:"Mumbai",radius:500},
+// {lat:18.5204,lng:73.8567,name:"Pune",radius:500},
+// {lat:21.1458,lng:79.0882,name:"Nagpur",radius:500},
+
+// /* Manipur */
+// {lat:24.8170,lng:93.9368,name:"Imphal",radius:500},
+// {lat:24.6337,lng:93.9826,name:"Thoubal",radius:500},
+// {lat:24.3180,lng:93.6916,name:"Churachandpur",radius:500},
+
+// /* Meghalaya */
+// {lat:25.5788,lng:91.8933,name:"Shillong",radius:500},
+// {lat:25.5671,lng:91.8800,name:"Tura",radius:500},
+// {lat:25.4670,lng:91.3662,name:"Nongpoh",radius:500},
+
+// /* Mizoram */
+// {lat:23.7271,lng:92.7176,name:"Aizawl",radius:500},
+// {lat:22.8671,lng:92.7730,name:"Lunglei",radius:500},
+// {lat:23.0370,lng:92.7200,name:"Champhai",radius:500},
+
+// /* Nagaland */
+// {lat:25.6751,lng:94.1086,name:"Kohima",radius:500},
+// {lat:25.9063,lng:93.7276,name:"Dimapur",radius:500},
+// {lat:26.1103,lng:94.2676,name:"Mokokchung",radius:500},
+
+// /* Odisha */
+// {lat:20.2961,lng:85.8245,name:"Bhubaneswar",radius:500},
+// {lat:19.8135,lng:85.8312,name:"Puri",radius:500},
+// {lat:22.2604,lng:84.8536,name:"Rourkela",radius:500},
+
+// /* Punjab */
+// {lat:31.6340,lng:74.8723,name:"Amritsar",radius:500},
+// {lat:30.7333,lng:76.7794,name:"Chandigarh",radius:500},
+// {lat:30.9010,lng:75.8573,name:"Ludhiana",radius:500},
+
+// /* Rajasthan */
+// {lat:26.9124,lng:75.7873,name:"Jaipur",radius:500},
+// {lat:26.2389,lng:73.0243,name:"Jodhpur",radius:500},
+// {lat:24.5854,lng:73.7125,name:"Udaipur",radius:500},
+
+// /* Sikkim */
+// {lat:27.3314,lng:88.6138,name:"Gangtok",radius:500},
+// {lat:27.1069,lng:88.8000,name:"Namchi",radius:500},
+// {lat:27.2960,lng:88.5535,name:"Mangan",radius:500},
+
+// /* Tamil Nadu */
+// {lat:13.0827,lng:80.2707,name:"Chennai",radius:500},
+// {lat:11.0168,lng:76.9558,name:"Coimbatore",radius:500},
+// {lat:9.9252,lng:78.1198,name:"Madurai",radius:500},
+
+// /* Telangana */
+// {lat:17.3850,lng:78.4867,name:"Hyderabad",radius:500},
+// {lat:18.1124,lng:79.0193,name:"Warangal",radius:500},
+// {lat:17.9689,lng:79.5941,name:"Khammam",radius:500},
+
+// /* Tripura */
+// {lat:23.8315,lng:91.2868,name:"Agartala",radius:500},
+// {lat:24.3175,lng:92.0046,name:"Dharmanagar",radius:500},
+// {lat:23.9400,lng:91.9880,name:"Udaipur",radius:500},
+
+// /* Uttar Pradesh */
+// {lat:26.8467,lng:80.9462,name:"Lucknow",radius:500},
+// {lat:25.3176,lng:82.9739,name:"Varanasi",radius:500},
+// {lat:27.1767,lng:78.0081,name:"Agra",radius:500},
+
+// /* Uttarakhand */
+// {lat:30.3165,lng:78.0322,name:"Dehradun",radius:500},
+// {lat:29.9457,lng:78.1642,name:"Haridwar",radius:500},
+// {lat:30.0869,lng:78.2676,name:"Rishikesh",radius:500},
+
+// /* West Bengal */
+// {lat:22.5726,lng:88.3639,name:"Kolkata",radius:500},
+// {lat:26.7271,lng:88.3953,name:"Siliguri",radius:500},
+// {lat:23.5461,lng:87.2900,name:"Durgapur",radius:500},
+
+// ];
+
+// // ================= UNSAFE ZONES =================
+
+// const unsafeZones = [
+
+// /* Andhra Pradesh */
+// {lat:17.7500,lng:83.2800,name:"Visakhapatnam Highway",radius:5500},
+// {lat:16.5400,lng:80.7000,name:"Vijayawada Industrial",radius:5500},
+// {lat:14.4700,lng:79.9500,name:"Nellore Outskirts",radius:5500},
+
+// /* Arunachal Pradesh */
+// {lat:27.0500,lng:93.6500,name:"Itanagar Hills",radius:5500},
+// {lat:27.1200,lng:93.5800,name:"Naharlagun Remote",radius:5500},
+// {lat:27.4800,lng:95.0600,name:"Pasighat Border",radius:5500},
+
+// /* Assam */
+// {lat:26.1600,lng:91.7800,name:"Guwahati Industrial",radius:5500},
+// {lat:26.7800,lng:94.2300,name:"Jorhat Highway",radius:5500},
+// {lat:26.6700,lng:92.8300,name:"Tezpur Remote",radius:5500},
+
+// /* Bihar */
+// {lat:25.6300,lng:85.1800,name:"Patna Highway",radius:5500},
+// {lat:26.1500,lng:85.3900,name:"Muzaffarpur Rural",radius:5500},
+// {lat:24.7700,lng:84.9800,name:"Gaya Hills",radius:5500},
+
+// /* Chhattisgarh */
+// {lat:21.2800,lng:81.6600,name:"Raipur Industrial",radius:5500},
+// {lat:22.1100,lng:82.1700,name:"Bilaspur Mining",radius:5500},
+// {lat:19.1000,lng:81.9700,name:"Jagdalpur Forest",radius:5500},
+
+// /* Goa */
+// {lat:15.5100,lng:73.8500,name:"Panaji Outskirts",radius:5500},
+// {lat:15.3200,lng:74.1500,name:"Margao Remote",radius:5500},
+// {lat:15.6300,lng:73.7800,name:"Mapusa Highway",radius:5500},
+
+// /* Gujarat */
+// {lat:23.0500,lng:72.6000,name:"Ahmedabad Industrial",radius:5500},
+// {lat:21.2000,lng:72.8600,name:"Surat Highway",radius:5500},
+// {lat:22.3400,lng:70.8200,name:"Rajkot Remote",radius:5500},
+
+// /* Haryana */
+// {lat:28.4800,lng:77.0500,name:"Gurgaon Night",radius:5500},
+// {lat:29.0800,lng:76.1200,name:"Rohtak Highway",radius:5500},
+// {lat:28.9200,lng:76.6500,name:"Jhajjar Rural",radius:5500},
+
+// /* Himachal Pradesh */
+// {lat:31.1300,lng:77.2000,name:"Shimla Hills",radius:5500},
+// {lat:32.2500,lng:76.3500,name:"Dharamshala Forest",radius:5500},
+// {lat:32.2800,lng:77.2200,name:"Manali Route",radius:5500},
+
+// /* Jharkhand */
+// {lat:23.3700,lng:85.3400,name:"Ranchi Mining",radius:5500},
+// {lat:23.8200,lng:86.4600,name:"Dhanbad Coal",radius:5500},
+// {lat:22.8300,lng:86.2300,name:"Jamshedpur Industrial",radius:5500},
+
+// /* Karnataka */
+// {lat:13.0358, lng:77.5970, name:"Hebbal Flyover", radius:1500},
+// {lat:13.1986, lng:77.7066, name:"Airport Highway (NH44)", radius:1500},
+// {lat:12.9767, lng:77.5713, name:"Majestic Bus Stand", radius:1200},
+// {lat:12.9698, lng:77.7500, name:"KR Puram Bridge", radius:1400},
+// {lat:12.9275, lng:77.5830, name:"Silk Board Junction", radius:1500},
+// {lat:13.0090, lng:77.5510, name:"Yeshwanthpur Circle", radius:1200},
+
+// /* Kerala */
+// {lat:8.5500,lng:76.9600,name:"Trivandrum Remote",radius:5500},
+// {lat:9.9600,lng:76.2900,name:"Kochi Port",radius:5500},
+// {lat:11.2800,lng:75.8100,name:"Kozhikode Hills",radius:5500},
+
+// /* Madhya Pradesh */
+// {lat:23.2900,lng:77.4400,name:"Bhopal Industrial",radius:5500},
+// {lat:22.7500,lng:75.8800,name:"Indore Highway",radius:5500},
+// {lat:23.2100,lng:80.0200,name:"Jabalpur Remote",radius:5500},
+
+// /* Maharashtra */
+// {lat:19.1000,lng:72.9000,name:"Mumbai Dock",radius:5500},
+// {lat:18.5500,lng:73.9000,name:"Pune Highway",radius:5500},
+// {lat:21.1800,lng:79.1200,name:"Nagpur Outskirts",radius:5500},
+
+// /* Manipur */
+// {lat:24.8400,lng:93.9600,name:"Imphal Border",radius:5500},
+// {lat:24.6600,lng:94.0000,name:"Thoubal Remote",radius:5500},
+// {lat:24.3500,lng:93.7200,name:"Churachandpur Hills",radius:5500},
+
+// /* Meghalaya */
+// {lat:25.6000,lng:91.9100,name:"Shillong Hills",radius:5500},
+// {lat:25.5800,lng:91.8600,name:"Tura Forest",radius:5500},
+// {lat:25.5000,lng:91.3800,name:"Nongpoh Highway",radius:5500},
+
+// /* Mizoram */
+// {lat:23.7500,lng:92.7400,name:"Aizawl Hills",radius:5500},
+// {lat:22.8900,lng:92.7900,name:"Lunglei Remote",radius:5500},
+// {lat:23.0600,lng:92.7400,name:"Champhai Border",radius:5500},
+
+// /* Nagaland */
+// {lat:25.7000,lng:94.1300,name:"Kohima Hills",radius:5500},
+// {lat:25.9300,lng:93.7500,name:"Dimapur Border",radius:5500},
+// {lat:26.1400,lng:94.3000,name:"Mokokchung Remote",radius:5500},
+
+// /* Odisha */
+// {lat:20.3200,lng:85.8500,name:"Bhubaneswar Industrial",radius:5500},
+// {lat:19.8400,lng:85.8600,name:"Puri Night",radius:5500},
+// {lat:22.2800,lng:84.8800,name:"Rourkela Mining",radius:5500},
+
+// /* Punjab */
+// {lat:31.6600,lng:74.9000,name:"Amritsar Border",radius:5500},
+// {lat:30.7600,lng:76.8100,name:"Chandigarh Highway",radius:5500},
+// {lat:30.9200,lng:75.8900,name:"Ludhiana Industrial",radius:5500},
+
+// /* Rajasthan */
+// {lat:26.9400,lng:75.8200,name:"Jaipur Highway",radius:5500},
+// {lat:26.2600,lng:73.0600,name:"Jodhpur Desert",radius:5500},
+// {lat:24.6100,lng:73.7400,name:"Udaipur Hills",radius:5500},
+
+// /* Sikkim */
+// {lat:27.3500,lng:88.6400,name:"Gangtok Hills",radius:5500},
+// {lat:27.1200,lng:88.8200,name:"Namchi Remote",radius:5500},
+// {lat:27.3100,lng:88.5800,name:"Mangan Route",radius:5500},
+
+// /* Tamil Nadu */
+// {lat:13.1100,lng:80.2900,name:"Chennai Industrial",radius:5500},
+// {lat:11.0400,lng:76.9800,name:"Coimbatore Bypass",radius:5500},
+// {lat:9.9500,lng:78.1400,name:"Madurai Highway",radius:5500},
+
+// /* Telangana */
+// {lat:17.4200,lng:78.5100,name:"Hyderabad Outskirts",radius:5500},
+// {lat:18.1400,lng:79.0400,name:"Warangal Remote",radius:5500},
+// {lat:17.9800,lng:79.6200,name:"Khammam Forest",radius:5500},
+
+// /* Tripura */
+// {lat:23.8500,lng:91.3100,name:"Agartala Border",radius:5500},
+// {lat:24.3300,lng:92.0300,name:"Dharmanagar Remote",radius:5500},
+// {lat:23.9600,lng:92.0000,name:"Udaipur Hills",radius:5500},
+
+// /* Uttar Pradesh */
+// {lat:26.8700,lng:80.9700,name:"Lucknow Highway",radius:5500},
+// {lat:25.3300,lng:82.9900,name:"Varanasi Night",radius:5500},
+// {lat:27.2000,lng:78.0400,name:"Agra Bypass",radius:5500},
+
+// /* Uttarakhand */
+// {lat:30.3400,lng:78.0600,name:"Dehradun Hills",radius:5500},
+// {lat:29.9600,lng:78.1900,name:"Haridwar Night",radius:5500},
+// {lat:30.1100,lng:78.3000,name:"Rishikesh Route",radius:5500},
+
+// /* West Bengal */
+// {lat:22.6000,lng:88.3900,name:"Kolkata Industrial",radius:5500},
+// {lat:26.7500,lng:88.4200,name:"Siliguri Border",radius:5500},
+// {lat:23.5800,lng:87.3200,name:"Durgapur Industrial",radius:5500}
+
+// ];
+// from django.shortcuts import render
+
+// def zones(request):
+
+//     # ✅ SAFE ZONES (Tourist + Public Safe Areas)
+//     safe_zones = [
+const safeZones = [
+        // # Karnataka (Bangalore)
+        {"lat":12.9716,"lng":77.5946,"name":"MG Road","radius":800},
+        {"lat":12.9352,"lng":77.6245,"name":"Indiranagar","radius":800},
+        {"lat":13.1986,"lng":77.7066,"name":"Kempegowda Airport","radius":1000},
+
+        // # Maharashtra (Mumbai)
+        {"lat":19.0896,"lng":72.8656,"name":"Mumbai Airport","radius":1000},
+        {"lat":18.9217,"lng":72.8347,"name":"Gateway of India","radius":800},
+        {"lat":19.2183,"lng":72.9781,"name":"Thane City","radius":800},
+
+        // Delhi
+        {"lat":28.5562,"lng":77.1000,"name":"Delhi Airport","radius":1000},
+        {"lat":28.6129,"lng":77.2295,"name":"India Gate","radius":800},
+        {"lat":28.5245,"lng":77.1855,"name":"Saket","radius":800},
+
+        // Tamil Nadu (Chennai)
+        {"lat":12.9941,"lng":80.1709,"name":"Chennai Airport","radius":1000},
+        {"lat":13.0827,"lng":80.2707,"name":"Marina Beach","radius":800},
+        {"lat":11.0168,"lng":76.9558,"name":"Coimbatore City","radius":800},
+
+        // Telangana (Hyderabad)
+        {"lat":17.2403,"lng":78.4294,"name":"Hyderabad Airport","radius":1000},
+        {"lat":17.3616,"lng":78.4747,"name":"Charminar","radius":800},
+        {"lat":17.3850,"lng":78.4867,"name":"Hitech City","radius":800},
+
+        // West Bengal (Kolkata)
+        {"lat":22.6547,"lng":88.4467,"name":"Kolkata Airport","radius":1000},
+        {"lat":22.5726,"lng":88.3639,"name":"Park Street","radius":800},
+
+        // Kerala
+        {"lat":10.1520,"lng":76.4019,"name":"Cochin Airport","radius":1000},
+        {"lat":9.9312,"lng":76.2673,"name":"Kochi City","radius":800},
+
+        // Gujarat
+        {"lat":23.0732,"lng":72.6347,"name":"Ahmedabad Airport","radius":1000},
+        {"lat":23.0225,"lng":72.5714,"name":"Ahmedabad City","radius":800},
+
+        // Rajasthan
+        {"lat":26.8242,"lng":75.8122,"name":"Jaipur Airport","radius":1000},
+        {"lat":26.9124,"lng":75.7873,"name":"Jaipur City","radius":800},
+
+        // Uttar Pradesh
+        {"lat":26.7606,"lng":80.8893,"name":"Lucknow Airport","radius":1000},
+        {"lat":25.3176,"lng":82.9739,"name":"Varanasi","radius":800},
+
+    ]
+
+
+    // # ❌ UNSAFE ZONES (High Traffic / Accident / Routes)
+  const unsafeZones = [
+
+        // # Bangalore Routes
+        {"lat":13.0358,"lng":77.5970,"name":"Hebbal Flyover","radius":1500},
+        {"lat":13.1986,"lng":77.7066,"name":"Airport Highway NH44","radius":1500},
+        {"lat":12.9275,"lng":77.5830,"name":"Silk Board Junction","radius":1500},
+
+        // # Mumbai Routes
+        {"lat":19.0896,"lng":72.8656,"name":"Western Express Highway","radius":1500},
+        {"lat":18.9750,"lng":72.8258,"name":"Dadar Junction","radius":1500},
+
+        // # Delhi Routes
+        {"lat":28.5562,"lng":77.1000,"name":"NH48 Airport Road","radius":1500},
+        {"lat":28.7041,"lng":77.1025,"name":"Outer Ring Road","radius":1500},
+
+        // # Chennai Routes
+        {"lat":12.9941,"lng":80.1709,"name":"GST Road Airport Route","radius":1500},
+        {"lat":13.0500,"lng":80.2700,"name":"Chennai Central Area","radius":1500},
+
+        // # Hyderabad Routes
+        {"lat":17.2403,"lng":78.4294,"name":"ORR Airport Route","radius":1500},
+        {"lat":17.3850,"lng":78.4867,"name":"Ameerpet Junction","radius":1500},
+
+        // # Kolkata
+        {"lat":22.6547,"lng":88.4467,"name":"VIP Road Airport Route","radius":1500},
+
+        // # Kerala
+        {"lat":10.1520,"lng":76.4019,"name":"NH66 Coastal Highway","radius":1500},
+
+        // # Gujarat
+        {"lat":23.0732,"lng":72.6347,"name":"SG Highway Ahmedabad","radius":1500},
+
+        // # Rajasthan
+        {"lat":26.8242,"lng":75.8122,"name":"Jaipur Ring Road","radius":1500},
+
+        // # Uttar Pradesh
+        {"lat":26.7606,"lng":80.8893,"name":"Lucknow Ring Road","radius":1500},
+
+    ]
+
+// Draw safe zones
+
+// ================= DRAW SAFE ZONES =================
+
+safeZones.forEach(z=>{
+L.circle([z.lat,z.lng],{
+color:'#00b300',
+fillColor:'#00ff00',
+fillOpacity:0.35,
+weight:2,
+radius:z.radius
+}).addTo(map)
+.bindPopup("✅ SAFE ZONE : " + z.name);
+});
+
+
+// ================= DRAW UNSAFE ZONES =================
+
+unsafeZones.forEach(z=>{
+L.circle([z.lat,z.lng],{
+color:'#ff0000',
+fillColor:'#ff4d4d',
+fillOpacity:0.35,
+weight:2,
+radius:z.radius
+}).addTo(map)
+.bindPopup("⚠️ UNSAFE ZONE : " + z.name);
+});
+// ================= GPS =================
+
+var marker;
+
+function success(pos){
+
+const lat=pos.coords.latitude;
+const lng=pos.coords.longitude;
+
+if(!marker){
+marker=L.marker([lat,lng]).addTo(map);
+}else{
+marker.setLatLng([lat,lng]);
+}
+
+map.setView([lat,lng],15);
+
+}
+
+navigator.geolocation.watchPosition(success);
+
+</script>
+
+</body>
+</html>

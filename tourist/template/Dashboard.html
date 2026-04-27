@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Dashboard</title>
+    <style>
+        /* Navbar */
+        body{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #203a43;
+}
+.secondary {
+    border: 2px solid #2563eb;
+    color: #2563eb;
+}
+h1{
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+p {
+    font: 16px open-sans, sans-serif;
+    line-height: 24px;
+    max-width: 700px;
+    margin: 20px auto;
+    color: #555;
+}
+.nav-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: #505050;
+    text-decoration: none;
+}
+.nav-items a {
+    gap: 20px;
+    color: #8d8d8d;
+    text-decoration: none;
+}
+
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<header class="navbar">
+    <div class="logo">🛡 Smart Tourist Safety</div>
+    <div class="nav-items">
+        <!-- <a href="livelocation.html">Live Location Tracking</a> -->
+        <a href="{% url 'zones' %}">Safe & Unsafe Zones</a>
+        <a href="{% url 'emergency' %}">Emergency Alerts</a>
+        <a href="{% url 'feedback' %}">Feedback</a>
+        <a href="{% url 'panic' %}" style="color:blue; border: 2px solid blue; background-color: transparent;" class="btn primary">Panic Button</a>
+        <a href="{% url 'livelocation' %}" style="color:white" class="btn primary">Live Location Tracking</a>
+    </div>
+</header> 
+
+<h2>Smart Tourist Safety Dashboard</h2>
+
+<h3>Your Blockchain Identity ID</h3>
+
+<p>{{ identity_id }}</p>
+
+</body>
+</html>

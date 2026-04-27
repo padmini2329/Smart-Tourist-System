@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Alert</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #d90429;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #d90429;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a6031e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🚨 Emergency Alert</h2>
+
+    <form method="POST">
+
+        <input type="text" name="name" placeholder="Enter Your Name" required>
+        <input type="text" name="location" placeholder="Enter Your Location" required>
+        <textarea name="issue" placeholder="Describe the Issue" required></textarea>
+
+        <button type="submit">Send Emergency Alert</button>
+    </form>
+</div>
+
+</body>
+</html>

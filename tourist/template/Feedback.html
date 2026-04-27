@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Contact us</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/Feedback.css' %}">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+
+	<style>
+		/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #203a43;
+}
+.secondary {
+    border: 2px solid #2563eb;
+    color: #2563eb;
+}
+h1{
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+p {
+    font: 16px open-sans, sans-serif;
+    line-height: 24px;
+    max-width: 700px;
+    margin: 20px auto;
+    color: #555;
+}
+.nav-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: #505050;
+    text-decoration: none;
+}
+.nav-items a {
+    gap: 20px;
+    color: #8d8d8d;
+    text-decoration: none;
+}
+
+	</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+    <div class="logo">🛡 Smart Tourist Safety</div>
+    <div class="nav-items">
+        <!-- <a href="livelocation.html">Live Location Tracking</a> -->
+        <a href="{% url 'zones' %}">Safe & Unsafe Zones</a>
+        <a href="{% url 'emergency' %}">Emergency Alerts</a>
+        <a href="{% url 'feedback' %}">Feedback</a>
+        <a href="{% url 'panic' %}" style="color:blue; border: 2px solid blue; background-color: transparent; display:inline" class="btn primary">Panic Button</a>
+        <a href="{% url 'livelocation' %}" style="color:white" class="btn primary">Live Location Tracking</a>
+    </div>
+</header>
+         <div class="main">
+	<div class="container">
+		<form action="" method="POST">
+			{% csrf_token %}
+			<div class="contact-box">
+				<div class="left"></div>
+				<div class="right">
+					<h2>FEEDBACK</h2>
+					<!-- <h5>our contact information is 99999999 </h5> -->
+          		<br>
+					<input type="text" id="name" name="name" class="field"  placeholder="Your Name" required>
+					<input type="text" id="email" name="email" class="field"  placeholder="Your Email" required>
+					<!-- <input type="text" id="phonenumber" name="phonenumber" class="field"  placeholder="Phone"> -->
+					<textarea placeholder="Message" id="msg" name="msg" class="field" required></textarea>
+					<button class="btn-submit">Submit</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+</body>
+</html>

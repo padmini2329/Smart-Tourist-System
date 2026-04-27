@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Alert</title>
+
+{% load static %}
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+height:100vh;
+}
+
+/* Header */
+
+header{
+background:#111;
+color:white;
+text-align:center;
+padding:15px;
+}
+
+header h1{
+font-size:24px;
+}
+
+/* Background */
+
+.outercont{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background-image: url("{% static 'css/banner.jpg' %}");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+position: relative;
+}
+
+/* Blur overlay */
+
+.outercont::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: rgba(0,0,0,0.4);
+backdrop-filter: blur(5px);
+z-index:0;
+}
+
+/* Container */
+
+.container{
+position:relative;
+z-index:1;
+background:white;
+padding:40px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+width:400px;
+}
+
+.container h2{
+text-align:center;
+margin-bottom:20px;
+color:#d90429;
+}
+
+/* Inputs */
+
+.input-group{
+margin-bottom:15px;
+}
+
+input, textarea{
+width:100%;
+padding:12px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+textarea{
+resize:none;
+height:100px;
+}
+
+input:focus, textarea:focus{
+border-color:#d90429;
+outline:none;
+}
+
+/* Button */
+
+button{
+width:100%;
+padding:12px;
+background:#d90429;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+transition:0.3s;
+}
+
+button:hover{
+background:#a6031e;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.container{
+width:90%;
+padding:25px;
+}
+
+header h1{
+font-size:20px;
+}
+
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #203a43;
+}
+.secondary {
+    border: 2px solid #2563eb;
+    color: #2563eb;
+}
+h1{
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+p {
+    font: 16px open-sans, sans-serif;
+    line-height: 24px;
+    max-width: 700px;
+    margin: 20px auto;
+    color: #555;
+}
+.nav-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: #505050;
+    text-decoration: none;
+}
+.nav-items a {
+    gap: 20px;
+    color: #8d8d8d;
+    text-decoration: none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+    <div class="logo">🛡 Smart Tourist Safety</div>
+    <div class="nav-items">
+        <!-- <a href="livelocation.html">Live Location Tracking</a> -->
+        <a href="{% url 'zones' %}">Safe & Unsafe Zones</a>
+        <a href="{% url 'emergency' %}">Emergency Alerts</a>
+        <a href="{% url 'feedback' %}">Feedback</a>
+        <a href="{% url 'panic' %}" style="color:blue; border: 2px solid blue; background-color: transparent;" class="btn primary">Panic Button</a>
+        <a href="{% url 'livelocation' %}" style="color:white" class="btn primary">Live Location Tracking</a>
+    </div>
+</header>
+
+<div class="outercont">
+
+<div class="container">
+
+<h2>🚨 Emergency Alert</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="input-group">
+<input type="text" name="name" placeholder="Enter Your Name" required>
+</div>
+
+<div class="input-group">
+<input type="text" name="location" placeholder="Enter Your Location" required>
+</div>
+
+<div class="input-group">
+<textarea name="issue" placeholder="Describe the Issue" required></textarea>
+</div>
+
+<button type="submit">Send Emergency Alert</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>
